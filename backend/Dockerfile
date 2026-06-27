@@ -37,6 +37,7 @@ FROM deps AS builder
 # CSVs live in app/data/raw at runtime, but during the image build we only
 # need them transiently — the artifacts are what's actually shipped.
 COPY app/data/raw ./app/data/raw
+COPY app ./app
 COPY scripts ./scripts
 
 # build_artifacts.py expects to run from the backend/ root (so the
