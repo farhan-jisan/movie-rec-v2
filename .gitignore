@@ -1,0 +1,93 @@
+# ============================================================
+# Movie Recommender v2 — top-level .gitignore
+# ============================================================
+
+# ---------- Python (backend) ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+build/
+dist/
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+.pyright/
+
+# Secrets / local config — keep .env.example, ignore .env
+.env
+.env.*
+!.env.example
+
+# Data
+# - keep raw CSVs (small, source of truth)
+# - ignore generated artifacts (rebuildable)
+backend/app/data/artifacts/*
+!backend/app/data/artifacts/.gitkeep
+
+# ---------- Node (frontend) ----------
+node_modules/
+.pnpm-store/
+.parcel-cache/
+.vite/
+.next/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---------- Editors / OS ----------
+.idea/
+.vscode/
+.vscode-test/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---------- Build outputs ----------
+backend/build/
+backend/dist/
+frontend/dist/
+
+# ---------- Render / Vercel local state ----------
+.render/
+.vercel/
+
+# ---------- ML model caches ----------
+# Caches may be rebuilt by the SBERT pre-warm step in the Dockerfile.
+# Keep them out of git; the Docker image bakes a fresh copy at build time.
+.cache/
+models/
+*.bin
+*.gguf
+
+# ---------- Test / coverage artefacts ----------
+coverage/
+*.lcov
+.jest-cache/
+
+# ---------- BFG report artefacts (if re-running cleanup) ----------
+.bfg-report/
+.bfg-do-not-touch/

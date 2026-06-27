@@ -1,0 +1,1 @@
+"""Evaluation package — Precision@K and intra-list diversity harness."""

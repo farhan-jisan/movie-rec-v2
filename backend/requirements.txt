@@ -1,0 +1,28 @@
+# FastAPI backend — Movie Recommender v2
+# Pinned to current stable as of June 2026. Adjust if a new major breaks anything.
+
+# Web framework
+fastapi==0.118.0
+uvicorn[standard]==0.32.0
+pydantic==2.9.2
+pydantic-settings==2.6.1
+
+# Data + ML
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.5.2
+sentence-transformers==3.2.1
+faiss-cpu==1.8.0.post1
+
+# Text + search
+rapidfuzz==3.10.1
+nltk==3.9.1
+joblib==1.4.2
+
+# External HTTP (TMDB)
+requests==2.32.3
+tenacity==9.0.0
+
+# Tests
+pytest==8.3.3
+httpx==0.27.2  # for TestClient async support

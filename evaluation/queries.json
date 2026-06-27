@@ -1,0 +1,85 @@
+{
+  "_comment": "Hand-picked titles spanning eras, franchises, and genres.  expected_genres is used by the genre ground-truth metric (genre Jaccard >= 0.5 against seed).  Update via PR if you add more.",
+  "queries": [
+    {
+      "title": "Avatar",
+      "expected_genres": ["Action", "Adventure", "Fantasy", "Science Fiction"]
+    },
+    {
+      "title": "The Dark Knight",
+      "expected_genres": ["Action", "Crime", "Drama", "Thriller"]
+    },
+    {
+      "title": "Inception",
+      "expected_genres": ["Action", "Adventure", "Science Fiction", "Thriller"]
+    },
+    {
+      "title": "Pulp Fiction",
+      "expected_genres": ["Crime", "Drama"]
+    },
+    {
+      "title": "Forrest Gump",
+      "expected_genres": ["Comedy", "Drama", "Romance"]
+    },
+    {
+      "title": "Spirited Away",
+      "expected_genres": ["Animation", "Adventure", "Family", "Fantasy"]
+    },
+    {
+      "title": "Toy Story",
+      "expected_genres": ["Animation", "Adventure", "Comedy", "Family"]
+    },
+    {
+      "title": "The Godfather",
+      "expected_genres": ["Crime", "Drama"]
+    },
+    {
+      "title": "The Matrix",
+      "expected_genres": ["Action", "Science Fiction"]
+    },
+    {
+      "title": "Interstellar",
+      "expected_genres": ["Adventure", "Drama", "Science Fiction"]
+    },
+    {
+      "title": "Jurassic Park",
+      "expected_genres": ["Adventure", "Science Fiction"]
+    },
+    {
+      "title": "Finding Nemo",
+      "expected_genres": ["Animation", "Family"]
+    },
+    {
+      "title": "The Avengers",
+      "expected_genres": ["Action", "Adventure", "Science Fiction"]
+    },
+    {
+      "title": "Mad Max: Fury Road",
+      "expected_genres": ["Action", "Adventure", "Science Fiction"]
+    },
+    {
+      "title": "Whiplash",
+      "expected_genres": ["Drama", "Music"]
+    },
+    {
+      "title": "Parasite",
+      "expected_genres": ["Comedy", "Drama", "Thriller"]
+    },
+    {
+      "title": "Get Out",
+      "expected_genres": ["Horror", "Mystery", "Thriller"]
+    },
+    {
+      "title": "La La Land",
+      "expected_genres": ["Comedy", "Drama", "Music", "Romance"]
+    },
+    {
+      "title": "The Shawshank Redemption",
+      "expected_genres": ["Drama", "Crime"]
+    },
+    {
+      "title": "Gladiator",
+      "expected_genres": ["Action", "Adventure", "Drama"]
+    }
+  ]
+}

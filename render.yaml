@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+# Movie Recommender v2 — Render Blueprint
+# ---------------------------------------------------------------------------
+# Single free-tier Web Service.  Render auto-detects the Dockerfile in
+# `backend/` and builds the image, which already has artifacts + SBERT
+# baked in (see backend/Dockerfile).  No persistent disk is needed:
+# everything is loaded into memory at startup.
+# ---------------------------------------------------------------------------
+
+services:
+  - type: web
+    name: mr-api
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/healthz
+
+    envVars:
+      - key: TMDB_API_KEY
+        sync: false                     # supplied via Render dashboard secret
+      - key: ALLOWED_ORIGINS
+        value: "http://localhost:5173,https://<your-vercel-domain>.vercel.app"
+      - key: ARTIFACTS_DIR
+        value: ""
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONHASHSEED
+        value: "random"
+
+    autoDeploy: true

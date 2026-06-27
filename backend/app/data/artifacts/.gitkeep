@@ -1,0 +1,3 @@
+# Generated artifacts live here (parquet, tfidf, sbert, faiss, title_index).
+# They are gitignored because they're rebuilt by `scripts/build_artifacts.py`
+# and baked into the Docker image at build time.
