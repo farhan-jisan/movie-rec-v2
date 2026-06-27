@@ -42,7 +42,8 @@ COPY scripts ./scripts
 # build_artifacts.py expects to run from the backend/ root (so the
 # package layout matches runtime).  --force rebuilds everything so the
 # image always ships a fresh parquet + tfidf + sbert + faiss.
-RUN python scripts/build_artifacts.py --force
+# PYTHONPATH=/app makes `app.recommender` importable regardless of cwd.
+RUN PYTHONPATH=/app python scripts/build_artifacts.py --force
 
 # Pre-load SBERT so the running container never hits the HuggingFace cache
 # on first /recommend call.  The model is baked into the image layers.
