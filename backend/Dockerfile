@@ -38,7 +38,6 @@ FROM deps AS builder
 # need them transiently — the artifacts are what's actually shipped.
 COPY app/data/raw ./app/data/raw
 COPY scripts ./scripts
-COPY evaluation ./evaluation
 
 # build_artifacts.py expects to run from the backend/ root (so the
 # package layout matches runtime).  --force rebuilds everything so the
@@ -77,7 +76,6 @@ COPY --from=builder /app/app/data/raw ./app/data/raw
 # Copy the application source.
 COPY app ./app
 COPY scripts ./scripts
-COPY evaluation ./evaluation
 
 # Ensure the SBERT cache from stage 2 is present (otherwise HF will redownload).
 COPY --from=builder /root/.cache/huggingface /app/.cache/huggingface
