@@ -7,10 +7,10 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated, List
+from typing import List
 
-from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -27,13 +27,11 @@ class Settings(BaseSettings):
     tmdb_api_key: str = Field(default="", description="TMDB v3 API key")
 
     # --- CORS ---------------------------------------------------------------
-    # Comma-separated string in env, parsed to list[str].
-    # `NoDecode` stops pydantic-settings from trying to JSON-parse the raw
-    # env value (which fails for plain strings like "*"). The
-    # `mode="before"` validator below handles string→list conversion.
-    allowed_origins: Annotated[List[str], NoDecode] = Field(
-        default_factory=lambda: ["*"]
-    )
+    # Stored as a plain string from env (`ALLOWED_ORIGINS=a,b,c` or `"*"`).
+    # The `allowed_origins` property below parses it into list[str].
+    # Keeping the raw field as `str` avoids pydantic-settings' complex-type
+    # JSON decode step, which fails on simple values like `"*"`.
+    allowed_origins_raw: str = Field(default="*", alias="ALLOWED_ORIGINS")
 
     # --- Paths --------------------------------------------------------------
     # Defaults to <repo>/backend/app/data/artifacts/ at runtime.
@@ -45,21 +43,18 @@ class Settings(BaseSettings):
     # Default top-N for /recommend if client omits it.
     default_top_n: int = Field(default=10, ge=1, le=50)
 
-    @field_validator("allowed_origins", mode="before")
-    @classmethod
-    def _split_origins(cls, v):
-        """Allow comma-separated string from env (e.g. ALLOWED_ORIGINS=a,b,c).
+    @property
+    def allowed_origins(self) -> List[str]:
+        """Parse `allowed_origins_raw` into a clean list of origins.
 
-        Tolerate missing / empty / placeholder values by falling back to ["*"]
-        so the app boots even when the env var is unset or contains a
-        unsubstituted template like ``https://<your-vercel-domain>.vercel.app``.
+        Tolerates missing / empty / placeholder values by falling back to
+        ``["*"]`` so the app boots even when the env var is unset or contains
+        an unsubstituted template like ``https://<your-vercel-domain>.vercel.app``.
         """
-        if isinstance(v, str):
-            stripped = v.strip()
-            if not stripped or "<" in stripped and ">" in stripped:
-                return ["*"]
-            return [o.strip() for o in stripped.split(",") if o.strip()]
-        return v
+        v = (self.allowed_origins_raw or "").strip()
+        if not v or v == "*" or "<" in v and ">" in v:
+            return ["*"]
+        return [o.strip() for o in v.split(",") if o.strip()]
 
     @property
     def artifacts_ready(self) -> bool:
