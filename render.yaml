@@ -22,7 +22,9 @@ services:
       - key: TMDB_API_KEY
         sync: false                     # supplied via Render dashboard secret
       - key: ALLOWED_ORIGINS
-        value: "http://localhost:5173,https://<your-vercel-domain>.vercel.app"
+        # Edit this in the Render dashboard to add your real Vercel origin.
+        # Leave as "*" to allow any origin (development only).
+        value: "*"
       - key: ARTIFACTS_DIR
         value: ""
       - key: PYTHONUNBUFFERED

@@ -7,10 +7,10 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
-from typing import List
+from typing import Annotated, List
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -28,11 +28,11 @@ class Settings(BaseSettings):
 
     # --- CORS ---------------------------------------------------------------
     # Comma-separated string in env, parsed to list[str].
-    allowed_origins: List[str] = Field(
-        default_factory=lambda: [
-            "http://localhost:5173",
-            "http://127.0.0.1:5173",
-        ]
+    # `NoDecode` stops pydantic-settings from trying to JSON-parse the raw
+    # env value (which fails for plain strings like "*"). The
+    # `mode="before"` validator below handles string→list conversion.
+    allowed_origins: Annotated[List[str], NoDecode] = Field(
+        default_factory=lambda: ["*"]
     )
 
     # --- Paths --------------------------------------------------------------
@@ -48,9 +48,17 @@ class Settings(BaseSettings):
     @field_validator("allowed_origins", mode="before")
     @classmethod
     def _split_origins(cls, v):
-        """Allow comma-separated string from env (e.g. ALLOWED_ORIGINS=a,b,c)."""
+        """Allow comma-separated string from env (e.g. ALLOWED_ORIGINS=a,b,c).
+
+        Tolerate missing / empty / placeholder values by falling back to ["*"]
+        so the app boots even when the env var is unset or contains a
+        unsubstituted template like ``https://<your-vercel-domain>.vercel.app``.
+        """
         if isinstance(v, str):
-            return [o.strip() for o in v.split(",") if o.strip()]
+            stripped = v.strip()
+            if not stripped or "<" in stripped and ">" in stripped:
+                return ["*"]
+            return [o.strip() for o in stripped.split(",") if o.strip()]
         return v
 
     @property
