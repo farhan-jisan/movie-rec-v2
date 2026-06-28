@@ -13,6 +13,7 @@ numpy==1.26.4
 scikit-learn==1.5.2
 sentence-transformers==3.2.1
 faiss-cpu==1.8.0.post1
+pyarrow>=16.0   # parquet I/O for pandas.read_parquet / to_parquet
 
 # Text + search
 rapidfuzz==3.10.1
