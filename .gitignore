@@ -79,7 +79,7 @@ frontend/dist/
 # Caches may be rebuilt by the SBERT pre-warm step in the Dockerfile.
 # Keep them out of git; the Docker image bakes a fresh copy at build time.
 .cache/
-models/
+/models/
 *.bin
 *.gguf
 
