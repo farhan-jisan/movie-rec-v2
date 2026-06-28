@@ -31,7 +31,13 @@ class Settings(BaseSettings):
     # The `allowed_origins` property below parses it into list[str].
     # Keeping the raw field as `str` avoids pydantic-settings' complex-type
     # JSON decode step, which fails on simple values like `"*"`.
-    allowed_origins_raw: str = Field(default="*", alias="ALLOWED_ORIGINS")
+    allowed_origins_raw: str = Field(
+        default=(
+            "https://movie-rec-v2-dg6okjrhj-farhan-jisaaan.vercel.app,"
+            "http://localhost:5173,*"
+        ),
+        alias="ALLOWED_ORIGINS",
+    )
 
     # --- Paths --------------------------------------------------------------
     # Absolute path to <backend>/app/data/artifacts/ at runtime. Uses

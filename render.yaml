@@ -22,9 +22,10 @@ services:
       - key: TMDB_API_KEY
         sync: false                     # supplied via Render dashboard secret
       - key: ALLOWED_ORIGINS
-        # Edit this in the Render dashboard to add your real Vercel origin.
-        # Leave as "*" to allow any origin (development only).
-        value: "*"
+        # Comma-separated list of allowed origins. Add your real Vercel
+        # domain here, plus localhost for dev. Render Blueprint auto-applies
+        # this on every deploy; you can still override it in the dashboard.
+        value: "https://movie-rec-v2-dg6okjrhj-farhan-jisaaan.vercel.app,http://localhost:5173,*"
       - key: ARTIFACTS_DIR
         value: ""
       - key: PYTHONUNBUFFERED
