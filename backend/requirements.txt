@@ -5,7 +5,7 @@
 fastapi==0.118.0
 uvicorn[standard]==0.32.0
 pydantic==2.9.2
-pydantic-settings==2.6.1
+pydantic-settings>=2.3.0,<3
 
 # Data + ML
 pandas==2.2.3
