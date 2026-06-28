@@ -100,9 +100,9 @@ export default function Home() {
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
               Top {data.results.length} picks for{" "}
-              <span className="font-medium text-foreground">{data.query.title}</span>
+              <span className="font-medium text-foreground">{data.query?.title}</span>
               <span className="ml-2 text-xs">
-                · {((data.debug.rank_ms ?? 0) + (data.debug.enrich_ms ?? 0)).toFixed(0)} ms
+                · {((data.debug?.rank_ms ?? 0) + (data.debug?.enrich_ms ?? 0)).toFixed(0)} ms
               </span>
             </p>
             {data.results.length === 0 ? (
