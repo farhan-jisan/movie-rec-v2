@@ -25,6 +25,11 @@ from app.recommender.search import Recommender
 
 logger = logging.getLogger(__name__)
 
+# Absolute path to the artifacts directory baked into the Docker image at
+# /app/app/data/artifacts (see backend/Dockerfile stage 3). Using an
+# absolute path avoids any dependence on cwd / WORKDIR at startup.
+ARTIFACTS_DIR = Path(__file__).resolve().parent.parent / "data" / "artifacts"
+
 
 def _load_artifacts(artifacts_dir: Path) -> Dict[str, Any]:
     """Read every artifact from disk and return as a dict."""
@@ -69,7 +74,12 @@ async def lifespan(app: FastAPI):
         return
 
     try:
-        state = _load_artifacts(settings.artifacts_dir)
+        # Prefer the absolute path (independent of cwd). Fall back to
+        # settings.artifacts_dir if the absolute location is missing —
+        # covers the case where someone points ARTIFACTS_DIR elsewhere.
+        artifacts_path = ARTIFACTS_DIR if ARTIFACTS_DIR.exists() else settings.artifacts_dir
+        logger.info("Using artifacts directory: %s", artifacts_path)
+        state = _load_artifacts(artifacts_path)
         app.state.recommender = Recommender(state)
         app.state.ready = True
         logger.info("Recommender ready: %d movies indexed.", len(state["title_index"]))

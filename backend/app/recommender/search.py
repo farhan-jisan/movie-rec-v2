@@ -13,6 +13,7 @@ exposed as methods for the test suite.
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import faiss
@@ -40,9 +41,19 @@ class Recommender:
     def __init__(self, state: Dict[str, Any]):
         self._state = state
 
-        # TF-IDF
-        self._tfidf_vectorizer: TfidfVectorizer = state["tfidf_vectorizer"]
-        self._tfidf_matrix: csr_matrix = state["tfidf_matrix"]
+        # Coerce any path-like entries to absolute Paths so file loads are
+        # independent of the process cwd. Defensive: protects against callers
+        # passing in a relative path like "../data/artifacts/movies.parquet".
+        mp = state.get("movies_parquet")
+        if mp is not None and not Path(mp).is_absolute():
+            mp = (
+                Path(__file__).resolve().parent.parent
+                / "data"
+                / "artifacts"
+                / Path(mp).name
+            )
+        state["movies_parquet"] = mp
+
 
         # SBERT + Faiss
         self._sbert_embeddings: np.ndarray = state["sbert_embeddings"]
