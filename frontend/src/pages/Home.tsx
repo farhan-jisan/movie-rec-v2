@@ -35,7 +35,7 @@ export default function Home() {
   const request: RecommendRequest = useMemo(
     () => ({
       title: submittedTitle,
-      top_k: 12,
+      top_n: 12,
       genres: filters.genres,
       year_min: filters.yearRange[0],
       year_max: filters.yearRange[1],
@@ -100,12 +100,9 @@ export default function Home() {
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
               Top {data.results.length} picks for{" "}
-              <span className="font-medium text-foreground">{data.query.resolved_title}</span>
-              {data.query.matched_by && (
-                <span className="ml-1 text-xs">via {data.query.matched_by}</span>
-              )}
+              <span className="font-medium text-foreground">{data.query.title}</span>
               <span className="ml-2 text-xs">
-                · {data.debug.total_ms.toFixed(0)} ms
+                · {((data.debug.rank_ms ?? 0) + (data.debug.enrich_ms ?? 0)).toFixed(0)} ms
               </span>
             </p>
             {data.results.length === 0 ? (

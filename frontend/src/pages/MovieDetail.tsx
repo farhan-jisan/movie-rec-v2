@@ -40,7 +40,7 @@ export default function MovieDetail() {
     seedTitle
       ? {
           title: seedTitle,
-          top_k: 12,
+          top_n: 12,
           genres: [],
           year_min: 1900,
           year_max: new Date().getFullYear(),
@@ -64,14 +64,14 @@ export default function MovieDetail() {
       <div className="grid gap-6 md:grid-cols-[300px_1fr]">
         <div>
           {posterLoading && <Skeleton className="aspect-[2/3] w-full" />}
-          {!posterLoading && poster?.url && (
+          {!posterLoading && poster && (
             <img
-              src={poster.url}
+              src={poster}
               alt={`Movie ${movieId} poster`}
               className="w-full rounded-lg border shadow-sm"
             />
           )}
-          {!posterLoading && !poster?.url && (
+          {!posterLoading && !poster && (
             <Skeleton className="aspect-[2/3] w-full" />
           )}
         </div>
@@ -88,8 +88,8 @@ export default function MovieDetail() {
           )}
           {recs && recs.results.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-1">
-              {recs.query.resolved_title && (
-                <Badge variant="outline">{recs.query.resolved_title}</Badge>
+              {recs.query?.title && (
+                <Badge variant="outline">{recs.query.title}</Badge>
               )}
             </div>
           )}

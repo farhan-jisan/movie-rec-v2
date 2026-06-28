@@ -32,6 +32,7 @@ export interface RecommendDebug {
   rank_ms: number;
   enrich_ms: number;
   n_results: number;
+  reason?: string;
 }
 
 export interface RecommendResponse {
@@ -47,6 +48,7 @@ export interface RecommendRequest {
   year_min?: number;
   year_max?: number;
   min_rating?: number;
+  diversify?: boolean;
 }
 
 export interface FilterState {
