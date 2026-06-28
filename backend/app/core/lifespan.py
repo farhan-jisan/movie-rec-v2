@@ -62,11 +62,25 @@ def _load_artifacts(artifacts_dir: Path) -> Dict[str, Any]:
 async def lifespan(app: FastAPI):
     """Startup: load artifacts. Shutdown: nothing to release (all in-process)."""
     settings = get_settings()
-    if not settings.artifacts_ready:
+
+    # Resolve the artifacts directory absolutely, falling back to the
+    # settings value if the absolute one is missing. We check the directory
+    # *directly* (not via `settings.artifacts_ready`) so a wrong relative
+    # path in settings can't silently disable startup loading.
+    artifacts_path = ARTIFACTS_DIR if ARTIFACTS_DIR.exists() else settings.artifacts_dir
+    expected = [
+        "movies.parquet",
+        "tfidf_vectorizer.joblib",
+        "tfidf_matrix.npz",
+        "sbert_embeddings.npy",
+        "faiss_index.bin",
+        "title_index.json",
+    ]
+    if not artifacts_path.exists() or not any((artifacts_path / name).exists() for name in expected):
         logger.warning(
             "Artifacts missing in %s. Run `python scripts/build_artifacts.py --force` "
             "before starting the API. Endpoints will return 503 until then.",
-            settings.artifacts_dir,
+            artifacts_path,
         )
         app.state.recommender = None
         app.state.ready = False
@@ -74,10 +88,6 @@ async def lifespan(app: FastAPI):
         return
 
     try:
-        # Prefer the absolute path (independent of cwd). Fall back to
-        # settings.artifacts_dir if the absolute location is missing —
-        # covers the case where someone points ARTIFACTS_DIR elsewhere.
-        artifacts_path = ARTIFACTS_DIR if ARTIFACTS_DIR.exists() else settings.artifacts_dir
         logger.info("Using artifacts directory: %s", artifacts_path)
         state = _load_artifacts(artifacts_path)
         app.state.recommender = Recommender(state)

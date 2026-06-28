@@ -34,9 +34,12 @@ class Settings(BaseSettings):
     allowed_origins_raw: str = Field(default="*", alias="ALLOWED_ORIGINS")
 
     # --- Paths --------------------------------------------------------------
-    # Defaults to <repo>/backend/app/data/artifacts/ at runtime.
+    # Absolute path to <backend>/app/data/artifacts/ at runtime. Uses
+    # `parents[1]` (= `app/`) so the resolution is independent of cwd and
+    # matches both local dev and the Docker image layout
+    # (`/app/app/data/artifacts`).
     artifacts_dir: Path = Field(
-        default_factory=lambda: Path(__file__).resolve().parents[2] / "app" / "data" / "artifacts"
+        default_factory=lambda: Path(__file__).resolve().parents[1] / "data" / "artifacts"
     )
 
     # --- Behavior -----------------------------------------------------------
