@@ -125,6 +125,8 @@ _MOVIES_COLS = [
     "release_date", "vote_average", "vote_count", "runtime",
 ]
 _CREDITS_COLS = ["movie_id", "cast", "crew"]
+# Same list, post-rename — used AFTER credits.rename({"movie_id": "id"}).
+_CREDITS_COLS_RENAMED = ["id", "cast", "crew"]
 
 
 def load_merged_movies(raw_dir: Path) -> pd.DataFrame:
@@ -147,12 +149,14 @@ def load_merged_movies(raw_dir: Path) -> pd.DataFrame:
     logger.info("Reading %s", credits_path.name)
     credits = pd.read_csv(credits_path)
 
-    # TMDB uses 'id' in movies and 'movie_id' in credits — rename to merge.
+    # TMDB uses 'id' in movies and 'movie_id' in credits — rename BEFORE the
+    # column prune below, otherwise the merge key gets filtered out.
     credits = credits.rename(columns={"movie_id": "id"})
 
     # Keep only the columns we actually use, then merge.
+    # NOTE: order matters — rename first, then prune, so the join key survives.
     movies = movies[[c for c in _MOVIES_COLS if c in movies.columns]]
-    credits = credits[[c for c in _CREDITS_COLS if c in credits.columns]]
+    credits = credits[[c for c in _CREDITS_COLS_RENAMED if c in credits.columns]]
     df = movies.merge(credits, on="id", how="inner")
     logger.info("Merged rows: %d", len(df))
 
