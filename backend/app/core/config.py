@@ -32,10 +32,7 @@ class Settings(BaseSettings):
     # Keeping the raw field as `str` avoids pydantic-settings' complex-type
     # JSON decode step, which fails on simple values like `"*"`.
     allowed_origins_raw: str = Field(
-        default=(
-            "https://movie-rec-v2-dg6okjrhj-farhan-jisaaan.vercel.app,"
-            "http://localhost:5173,*"
-        ),
+        default="https://movie-rec-v2-dg6okjrhj-farhan-jisaaan.vercel.app",
         alias="ALLOWED_ORIGINS",
     )
 

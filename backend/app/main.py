@@ -34,11 +34,15 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS — must allow the Vercel frontend origin(s) and localhost for dev.
+    # CORS — explicit allowlist of frontend origins. We disable
+    # `allow_credentials` because we don't ship cookies / auth headers;
+    # doing so lets us later add a wildcard origin in dev if we ever
+    # need to without violating the CORS spec (which forbids
+    # `allow_credentials=True` alongside `allow_origins=["*"]`).
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.allowed_origins,
-        allow_credentials=True,
+        allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],
     )
