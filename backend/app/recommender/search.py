@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import faiss
 import numpy as np
-from rapidfuzz import process
+from rapidfuzz import fuzz, process
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
@@ -92,7 +92,7 @@ class Recommender:
         matches = process.extract(
             query,
             self._titles,
-            scorer=process.fuzz.WRatio,
+            scorer=fuzz.WRatio,
             limit=limit,
         )
         # matches is a list of (title, score, idx)
@@ -112,7 +112,7 @@ class Recommender:
         matches = process.extractOne(
             query,
             self._titles,
-            scorer=process.fuzz.WRatio,
+            scorer=fuzz.WRatio,
             score_cutoff=60,
         )
         if matches is None:
