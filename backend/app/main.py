@@ -11,7 +11,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.movies import router as movies_router, recommend_router
-from app.core.config import get_settings
 from app.core.lifespan import lifespan
 
 logging.basicConfig(
@@ -21,8 +20,6 @@ logging.basicConfig(
 
 
 def create_app() -> FastAPI:
-    settings = get_settings()
-
     app = FastAPI(
         title="Movie Recommender v2 API",
         version="0.1.0",
@@ -34,14 +31,15 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS — explicit allowlist of frontend origins. We disable
-    # `allow_credentials` because we don't ship cookies / auth headers;
-    # doing so lets us later add a wildcard origin in dev if we ever
-    # need to without violating the CORS spec (which forbids
-    # `allow_credentials=True` alongside `allow_origins=["*"]`).
+    # CORS — wildcard origin is safe here because we don't ship cookies
+    # or auth headers (`allow_credentials=False`). Per the CORS spec,
+    # browsers accept `Access-Control-Allow-Origin: *` only when the
+    # response does not include credentials. This is a portfolio demo
+    # with no auth, so a wildcard is the simplest correct configuration.
+    # The TMDB API key remains server-side only — that's the real secret.
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.allowed_origins,
+        allow_origins=["*"],
         allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],
